@@ -20,8 +20,8 @@ public class ProducerDemo {
 //        properties.setProperty("key","value");
 
 //        This connects to Local Host
+//        properties.put("bootstrap.servers", "localhost:9092");
         properties.setProperty("bootstrap.servers", "127.0.0.1:9092");
-
 
 //    Example of connecting to a third party
 //    properties.SetProperty("bootstrap.servers", "cluster.playground.cdkt.io:9092");
@@ -38,8 +38,8 @@ public class ProducerDemo {
 //    Create Producer
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
-//        Create a Proudcer Record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "hello world");
+//        Create a Producer Record
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "hello world!");
 
 //        Send Data
         producer.send(producerRecord);
