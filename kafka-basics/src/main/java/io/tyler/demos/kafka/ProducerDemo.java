@@ -21,7 +21,7 @@ public class ProducerDemo {
 
 //        This connects to Local Host
 //        properties.put("bootstrap.servers", "localhost:9092");
-        properties.setProperty("bootstrap.servers", "127.0.0.1:9092");
+        properties.setProperty("bootstrap.servers", "localhost:9092");
 
 //    Example of connecting to a third party
 //    properties.SetProperty("bootstrap.servers", "cluster.playground.cdkt.io:9092");
@@ -39,18 +39,18 @@ public class ProducerDemo {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
 //        Create a Producer Record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "hello world!");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("selftuts", "lets go!");
 
 //        Send Data
         producer.send(producerRecord);
 
-//        flush and close the producer
+//        flush and close producer
 //        the producer to send all data and block until done --synchronous
         producer.flush();
 
 //        You can call flush if you want to but if you call close it will always flush
 
-//        Producer close will also flush all of your data as well s
+//        Producer close will also flush all of your data as well
         producer.close();
     }
 }
