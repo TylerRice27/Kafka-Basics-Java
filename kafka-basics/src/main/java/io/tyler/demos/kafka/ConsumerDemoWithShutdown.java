@@ -81,7 +81,6 @@ public class ConsumerDemoWithShutdown {
 
 //        poll the data
             while (true) {
-                log.info("Polling");
 
 //            Duration of == How long will your consumer wait until it recieves Data from Kafka before moving on
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
