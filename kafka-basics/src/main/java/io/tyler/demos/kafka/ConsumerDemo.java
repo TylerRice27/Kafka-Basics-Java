@@ -54,7 +54,6 @@ public class ConsumerDemo {
 
 //        Subscribe to a topic/ You can do this in different ways either a pattern or you can do as a collection with Arrays as lists
         consumer.subscribe(Arrays.asList(topic));
-//s
 
 //        poll the data
         while (true)
