@@ -54,7 +54,7 @@ for (int j = 0 ; j <2 ; j++){
 //                Externalizing my Kafka parameters then injecting them into my ProducerRecord that I am sending
         String topic = "demo_batman";
         String key = "id_" + i;
-        String value = "hello world" + i;
+        String value = "hello world " + i;
 
 //            Create a Producer Record
         ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
