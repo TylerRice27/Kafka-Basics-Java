@@ -3,10 +3,7 @@ package io.tyler.demos.kafka;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +54,7 @@ public class ConsumerDemo {
 
 //        Subscribe to a topic/ You can do this in different ways either a pattern or you can do as a collection with Arrays as lists
         consumer.subscribe(Arrays.asList(topic));
+//s
 
 //        poll the data
         while (true)
