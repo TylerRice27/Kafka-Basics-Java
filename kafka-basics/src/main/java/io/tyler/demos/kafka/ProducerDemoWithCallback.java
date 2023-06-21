@@ -19,7 +19,6 @@ public class ProducerDemoWithCallback {
 //        properties.setProperty("key","value");
 
 //        This connects to Local Host
-//        properties.put("bootstrap.servers", "localhost:9092");
         properties.setProperty("bootstrap.servers", "localhost:9092");
 
 //    Example of connecting to a third party
