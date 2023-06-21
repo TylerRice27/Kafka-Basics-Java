@@ -1,11 +1,11 @@
 package io.conduktor.demos.kafka.wikimedia;
 
+import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import java.beans.EventHandler;
 import java.net.URI;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
