@@ -52,7 +52,7 @@ for (int j = 0 ; j <2 ; j++){
     for (int i=0; i<10 ; i++){
 
 //                Externalizing my Kafka parameters then injecting them into my ProducerRecord that I am sending
-        String topic = "demo_batman";
+        String topic = "demo_venom";
         String key = "id_" + i;
         String value = "hello world " + i;
 

@@ -92,7 +92,7 @@ public class ConsumerDemoWithShutdown {
                 }
             }
         } catch (WakeupException e){
-//            This catch/exception is expected because we want it to shutdown
+//            This catch/exception is expected because we want it to shut down
             log.info("Consumer is starting to shut down");
         } catch (Exception e){
 //            This catch/Exception is if something goes wrong.

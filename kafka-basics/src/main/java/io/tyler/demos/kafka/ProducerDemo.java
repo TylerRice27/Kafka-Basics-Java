@@ -39,7 +39,7 @@ public class ProducerDemo {
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
 //        Create a Producer Record
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_java", "java test!");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("demo_venom", "venom test!");
 
 //        Send Data
         producer.send(producerRecord);
