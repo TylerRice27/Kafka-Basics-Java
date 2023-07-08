@@ -1,6 +1,10 @@
 version: '3.3'
 # I changed my version from 3.9 to 3.3 to try and get the program to run based on a Note in Udemy Course
 
+#NOTES This file should be all ready if it disconnects if not delete oll containers
+# Then comment out the line you have comments on below at the bottom but first try this 3.3 version
+# Finally when it boots up on your localhost and it is a blank white screen clear localhost cache in your browser and it should work
+
 services:
   zoo1:
     image: confluentinc/cp-zookeeper:7.3.0
