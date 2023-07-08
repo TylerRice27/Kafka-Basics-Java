@@ -24,8 +24,9 @@ dependencies {
     implementation("org.opensearch.client:opensearch-rest-high-level-client:2.8.0")
 
 //    GSON Google
-    implementation("org.netbeans.external:com-google-gson:RELEASE113")
-
+//    implementation("org.netbeans.external:com-google-gson:RELEASE113")
+//    Changed to different GSON dependency because of code problem with my parse
+    implementation("com.google.code.gson:gson:2.9.1")
 
 }
 
