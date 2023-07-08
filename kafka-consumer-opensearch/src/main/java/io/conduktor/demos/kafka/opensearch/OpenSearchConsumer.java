@@ -7,7 +7,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
@@ -123,6 +122,7 @@ public class OpenSearchConsumer {
 
                 for (ConsumerRecord<String, String> record : records) {
 
+                    try {
                         //Send the record into OpenSearch
                         IndexRequest indexRequest = new IndexRequest("wikimedia")
                                 .source(record.value(), XContentType.JSON);
@@ -133,14 +133,11 @@ public class OpenSearchConsumer {
 
                         log.info(response.getId(), "This is inserting 1 document into OpenSearch");
 
-
+                    } catch (Exception e){
+                        // Do Nothing For Now
+                    }
                 }
             }
-//}  catch (WakeupException e) {
-//    // Do Nothing
-//} finally {
-//    consumer.close();
-//}
 
 
             //Code Logic
