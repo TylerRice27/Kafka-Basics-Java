@@ -7,7 +7,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
@@ -95,53 +95,62 @@ public class OpenSearchConsumer {
 
         // We need to create the index of OpenSearch if it does not exist
 
-        try(openSearchClient; consumer){
+        try(openSearchClient; consumer) {
 
             boolean indexExists = openSearchClient.indices().exists(new GetIndexRequest("wikimedia"), RequestOptions.DEFAULT);
 
-            if(!indexExists){
+            if (!indexExists) {
                 CreateIndexRequest createIndexRequest = new CreateIndexRequest("wikimedia");
                 openSearchClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
                 log.info("The Wikimedia index has been created");
-            }else{
-                log.info("The Wikimedia index already exists ");
+            } else {
+                log.info("The Wikimedia index already exists");
             }
 
 
-        }
-        //Sub the consumer
-        consumer.subscribe(Collections.singleton("wikimedia.recentchange"));
+            // Sub the consumer
+//        consumer.subscribe(Collections.singleton("wikimedia.recentchange"));
 
-        while (true){
+            consumer.subscribe(Collections.singleton("wikimedia.recentchange"));
+//try{
 
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
+            while (true) {
 
-            int recordCount = records.count();
-            log.info("Received" + recordCount + "record(s)");
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
 
-            for (ConsumerRecord<String, String> record : records){
+                int recordCount = records.count();
+                log.info("Received: " + recordCount + " record(s)");
 
-                //Send the record into OpenSearch
-                IndexRequest indexRequest = new IndexRequest("wikimedia")
-                        .source(record.value(), XContentType.JSON);
+                for (ConsumerRecord<String, String> record : records) {
 
-                IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+                        //Send the record into OpenSearch
+                        IndexRequest indexRequest = new IndexRequest("wikimedia")
+                                .source(record.value(), XContentType.JSON);
 
-                openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+                        IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
 
-                log.info(response.getId(), "This is inserting 1 document into OpenSearch");
+                        openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+
+                        log.info(response.getId(), "This is inserting 1 document into OpenSearch");
+
+
+                }
             }
+//}  catch (WakeupException e) {
+//    // Do Nothing
+//} finally {
+//    consumer.close();
+//}
+
+
+            //Code Logic
+
+
+            //Create Our Kafka Client
+
+            //Close Things
+
         }
-
-
-        //Code Logic
-
-
-        //Create Our Kafka Client
-
-        //Close Things
-
-
 
     }
 }
