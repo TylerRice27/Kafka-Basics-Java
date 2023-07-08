@@ -1,4 +1,5 @@
-version: '3.9'
+version: '3.3'
+# I changed my version from 3.9 to 3.3 to try and get the program to run based on a Note in Udemy Course
 
 services:
   zoo1:
@@ -65,6 +66,7 @@ services:
       - kafka1
       - kafka-schema-registry
     environment:
+#      NOTE Comment Out this file to run this Image Docker == I don't know why good question to ask
       CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
       KAFKA_BOOTSTRAP_SERVER: PLAINTEXT://kafka1:19092
       SR_SERVER: "http://kafka-schema-registry:8081"
