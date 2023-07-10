@@ -78,6 +78,11 @@ public class OpenSearchConsumer {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+//       NOTE this line of code below is responsible for turning off auto commit offsets by turing this off and
+//        not committing manually down below your consumer will always read all the messages again not ideal.
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+
+
 //        Create a Consumer
        return new KafkaConsumer<>(properties);
     }
@@ -92,6 +97,7 @@ public class OpenSearchConsumer {
                .get("id")
                .getAsString();
     }
+
 
     public static void main(String[] args) throws IOException {
 
@@ -129,6 +135,7 @@ public class OpenSearchConsumer {
 
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
 
+//                NOTE if you committed here it would be at-Most-Once
                 int recordCount = records.count();
                 log.info("Received: " + recordCount + " record(s)");
 
@@ -138,7 +145,7 @@ public class OpenSearchConsumer {
                     // NOTE Strategies to create Exactly Once Delivery
 
                     // Strategy 1
-                    // Define an Id using Kafka Record coordinates
+                    // Define an ID using Kafka Record coordinates
 //                    String id = record.topic() + "_" + record.partition() + "_" + record.offset();
                     try {
                         //Send the record into OpenSearch
@@ -158,6 +165,10 @@ public class OpenSearchConsumer {
                     } catch (Exception e){
                         // Do Nothing For Now
                     }
+
+                    // commit offsets after the batch is consumed. This creates at least once because it is after the processing
+                    consumer.commitSync();
+                    log.info("offsets have been committed");
                 }
             }
 
