@@ -9,6 +9,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.opensearch.action.bulk.BulkRequest;
+import org.opensearch.action.bulk.BulkResponse;
 import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
 import org.opensearch.client.RequestOptions;
@@ -139,6 +141,9 @@ public class OpenSearchConsumer {
                 int recordCount = records.count();
                 log.info("Received: " + recordCount + " record(s)");
 
+                BulkRequest bulkRequest = new BulkRequest();
+
+
                 for (ConsumerRecord<String, String> record : records) {
 
 
@@ -156,19 +161,35 @@ public class OpenSearchConsumer {
                                 .source(record.value(), XContentType.JSON)
                                 .id(id);
 
-                        IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+//                        This is an index request where we do a response for each individual message, but it is ineffiecent
+//                        IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
+
+                        bulkRequest.add(indexRequest);
 
                         openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
 
-                        log.info(response.getId(), "This is inserting 1 document into OpenSearch");
+//                        log.info(response.getId(), "This is inserting 1 document into OpenSearch");
 
                     } catch (Exception e){
                         // Do Nothing For Now
                     }
 
-                    // commit offsets after the batch is consumed. This creates at least once because it is after the processing
-                    consumer.commitSync();
-                    log.info("offsets have been committed");
+                    if (bulkRequest.numberOfActions() > 0) {
+                       BulkResponse bulkResponse = openSearchClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                        log.info("Inserted " + bulkResponse.getItems().length + " record(s).");
+
+
+                        try{
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
+
+                        // commit offsets after the batch is consumed. This creates at least once because it is after the processing
+                        consumer.commitSync();
+                        log.info("offsets have been committed");
+                    }
+
                 }
             }
 
