@@ -8,6 +8,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.opensearch.action.bulk.BulkRequest;
 import org.opensearch.action.bulk.BulkResponse;
@@ -111,6 +112,23 @@ public class OpenSearchConsumer {
         //Create Our Kafka Client
         KafkaConsumer<String, String> consumer = createKafkaConsumer();
 
+        final Thread mainThread = Thread.currentThread();
+
+
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            public  void run(){
+                log.info("Detected a shutdown, time for graceful shutdown");
+                consumer.wakeup();
+
+
+//                Join the main thread to allow the execution of the code in the main thread
+                try {
+                    mainThread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         // We need to create the index of OpenSearch if it does not exist
 
@@ -194,13 +212,15 @@ public class OpenSearchConsumer {
             }
 
 
-            //Code Logic
 
-
-            //Create Our Kafka Client
-
-            //Close Things
-
+        }catch (WakeupException e) {
+            log.info("consumer is shuting down");
+        } catch (Exception e){
+            log.error("Unexpected exception in the consumer", e);
+        } finally {
+            consumer.close();
+            openSearchClient.close();
+            log.info("the consumer has shutdown properly");
         }
 
     }
